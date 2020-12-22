@@ -8,24 +8,27 @@ use todolist\Entity\Task;
 
 $userRepo = $entityManager->getRepository(User::class);
 
-$queryBuilder = $entityManager->createQueryBuilder();
-$queryBuilder->select('tsk')
-    ->from(Task::class, 'tsk')
-    ->join(User::class, 'usr', 'tsk.id=usr.id')
-    ->where('usr.id = :user_id')
-    ->setParameter('user_id', 1);
-
-$query = $queryBuilder->getQuery();
-
-echo $query->getDQL(), "\n";
-foreach($query->getResult() as $task){
-    echo "<br>".$task->getTache();
+$users = new User();
+$usersByRole = $userRepo->findBy(["firstname" => $_GET['user_name']]);
+echo "Taches :";
+foreach ($usersByRole as $user) {
+    foreach ($user->getTask() as $task) {
+        echo "<br>". $task->getTache();
+    }
+    echo "<br>". " Créée par : " .$user->getFirstname();
 }
 
+//$queryBuilder = $entityManager->createQueryBuilder();
+//$queryBuilder->select('tsk')
+//    ->from(Task::class, 'tsk')
+//    ->join(User::class, 'usr', 'tsk.user_id=usr.id')
+//    ->where('usr.firstname = :user_name')
+//    ->setParameter('user_name', $_GET['user_name']);
 //
-//$user = $userRepo->find(1);
+//$query = $queryBuilder->getQuery();
 //
-//echo $user;
-//foreach ($user->getTask() as $task) {
-//    echo "- ", $task->getTache();
+////echo $query->getDQL(), "\n";
+//echo "Nom des tâches: \n";
+//foreach($query->getResult() as $task){
+//    echo "<br>".$task->getTache();
 //}

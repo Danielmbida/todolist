@@ -3,86 +3,114 @@
 $entityManager = require_once join(DIRECTORY_SEPARATOR, [__DIR__, 'bootstrap.php']);
 
 use todolist\Entity\User;
-use todolist\Entity\Task;
-
 ?>
-<!DOCTYPE html>
-<html lang="fr">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" Content="no-cache">
+    <meta http-equiv="Pragma" Content="no-cache">
+    <meta http-equiv="Cache" Content="no store">
+    <meta http-equiv="Expires" Content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Cidisi - Games</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Taches</title>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.js"></script>
+    <!-- CSS utilisée sur tout le site -->
+    <!--    <link rel="stylesheet" href="--><?//= URL ?><!--/css/global.css">-->
+    <link rel="stylesheet" href="css/module.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <!-- Bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <!-- Jquery validation plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
 </head>
 <body>
+<div class="row">
+    <div class="header">
 
-<div class="container">
-    <div class="row">
-        <div class="header">
-            <h3>Todo list</h3>
-        </div>
     </div>
+</div>
 
+<div class="col-md-12">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            Questions
+            <h1>Formulaire</h1>
         </div>
 
         <div class="panel-body">
-            <form id="sondage_form" action="create_user_task.php" method="post">
-                <div class="form-group row">
-                    <label for="date_debut" class="col-sm-2 col-form-label">date de début</label>
-                    <div class="col-sm-12">
-                        <input type="text" class="form-control" id="nom_per" name="nom_per" placeholder="Votre nom">
-                    </div>
-                </div>
 
-                <div class="form-group row">
-                    <label for="prenom_per" class="col-sm-2 col-form-label">Prénom</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="prenom_per" name="prenom_per" placeholder="Votre prénom">
-                    </div>
-                </div>
+            <h4 class="space">Tâches</h4>
 
-                <div class="form-group row">
-                    <label for="email_per" class="col-sm-2 col-form-label">E-mail</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" id="email_per" name="email_per" placeholder="Votre adresse e-mail">
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="password" class="col-sm-2 col-form-label">Mot de passe</label>
-                    <div class="col-sm-10">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Votre mot de passe">
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="password_conf" class="col-sm-2 col-form-label">Password (confirmation)</label>
-                    <div class="col-sm-10">
-                        <input type="password" class="form-control" id="password_conf" name="password_conf" placeholder="Saisissez votre mot de passe une seconde fois">
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-sm-offset-8 col-sm-2">
-                        <input type="submit" class="form-control btn btn-primary submit" id="submit_conf" name="submit_conf" value="S'inscrire">
-                    </div>
-
-                    <div class="col-sm-2">
-                        <input type="reset" class="form-control btn btn-warning" id="reset_conf" name="reset_conf" value="Annuler">
+            <form id="task_form" action="get_user_task.php" method="get">
+                <div class="form-group row col-sm-offset-4">
+                    <div class="col-sm-4">
+                        <label for="user_name">rechercher par l'utilisateur</label>
+                        <input class="form-control" type="text" id="user_name" name="user_name" placeholder="Rechercher">
                     </div>
                 </div>
             </form>
-            <div class="panel-footer">
 
-            </div>
+            <form id="task_form" action="get_task.php" method="get">
+                <div class="form-group row col-sm-offset-4">
+                    <div class="col-sm-4">
+                        <label for="tache">rechercher par la tache</label>
+                        <input class="form-control" type="text" id="tache" name="tache" placeholder="Rechercher">
+                    </div>
+                </div>
+            </form>
+
+
+            <form id="task_form" action="create_user_task.php" method="post">
+                <?php
+                $queryBuilder = $entityManager->createQueryBuilder();
+                $queryBuilder->select('usr')
+                    ->from(User::class, 'usr');
+
+                $queryAllUsers = $queryBuilder->getQuery();
+                ?>
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        <label for="user_name">Nom utilisateur</label>
+                        <select id="user_name" name="user_name" class="form-control">
+                            <?php
+                            foreach($queryAllUsers->getResult() as $user):
+                                ?>
+                                <option id="nom"><?= $user->getFirstname() ?></option>
+                            <?php
+                            endforeach;
+                            ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        <label for="date_db">Date de début</label>
+                        <input class="form-control" type="date" name="date_db" id="date_db">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        <label for="date_fin">Date de fin</label>
+                        <input class="form-control" type="date" name="date_fin" id="date_fin">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        <label for="tache">Tâche</label>
+                        <input class="form-control" type="text" id="tache" name="tache" placeholder="Votre tâche">
+                    </div>
+                </div>
+
+                <div class="form-group action-button col-sm-offset-4">
+                    <input type="submit" class="btn btn-primary submit" id="submit_conf" name="submit_conf" value="Envoyer">
+                    <a href="form.php" role="button" class="btn btn-warning">Annuler</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

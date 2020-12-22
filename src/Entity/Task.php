@@ -1,5 +1,6 @@
 <?php
 namespace todolist\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,13 +36,20 @@ class Task{
      */
     protected $user;
 
+//    public function __construct()
+//    {
+//        $this->user = new ArrayCollection();
+//    }
+
     public function __toString()
     {
-        $str = "<pre>Task";
-        $str .= "\nid : ".$this->id;
-        $str .= "\nTache : ".$this->tache. "\n";
+        $str = "<pre>" ;
+        echo "Detail de la tâche";
+//        $str .= "\nid : ".$this->id;
+        $str .= "\nNom de la Tache : ".$this->tache. "\n";
         $str .= "\ndate de début : ".$this->date_to->format(\Datetime::ISO8601)."\n";
         $str .= "\ndate de fin : ".$this->date_from->format(\Datetime::ISO8601)."\n";
+        $str .= "\nCréer par : ".$this->user->getFirstname(). " " . $this->user->getLastname() . "\n";
         $str .= "</pre>";
         return $str;
     }
